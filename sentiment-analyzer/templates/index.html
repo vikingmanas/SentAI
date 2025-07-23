@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentiment Analyzer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Enter a review:</h2>
+    <form id="reviewForm">
+        <textarea name="review" rows="5" cols="50"></textarea><br>
+        <button type="submit">Analyze</button>
+    </form>
+    <p id="result"></p>
+
+    <canvas id="sentimentChart" width="400" height="200"></canvas>
+
+    <script>
+        document.getElementById("reviewForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch("/analyze", {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+            document.getElementById("result").innerText = 
+                `Sentiment: ${result.label} (Confidence: ${result.score})`;
+            loadChart();
+        });
+
+        async function loadChart() {
+            const res = await fetch('/stats');
+            const data = await res.json();
+            const labels = data.map(item => item._id);
+            const counts = data.map(item => item.count);
+
+            const ctx = document.getElementById('sentimentChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '# of Reviews',
+                        data: counts,
+                        backgroundColor: ['green', 'gray', 'red']
+                    }]
+                }
+            });
+        }
+
+        loadChart();
+    </script>
+</body>
+</html>
