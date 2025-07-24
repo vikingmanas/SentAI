@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SentAI - Sentiment Analyzer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+        button { padding: 10px 20px; }
+        canvas { max-width: 600px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h2>💬 SentAI - Sentiment Analysis</h2>
+    <textarea id="textInput" placeholder="Enter your text..."></textarea>
+    <button onclick="analyze()">Analyze</button>
+    <p id="result"></p>
+
+    <canvas id="sentimentChart"></canvas>
+
+    <script>
+        async function analyze() {
+            const text = document.getElementById('textInput').value;
+
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+
+            const data = await response.json();
+            document.getElementById('result').innerText =
+                `Label: ${data.label}, Score: ${data.score}`;
+
+            loadChart();
+        }
+
+        async function loadChart() {
+            const response = await fetch('/history');
+            const data = await response.json();
+
+            const labels = data.map((d, i) => `#${i + 1}`);
+            const scores = data.map(d => d.score);
+            const backgroundColors = data.map(d =>
+                d.label === "POSITIVE" ? "green" : "red"
+            );
+
+            const ctx = document.getElementById('sentimentChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Sentiment Score',
+                        data: scores,
+                        backgroundColor: backgroundColors
+                    }]
+                }
+            });
+        }
+    </script>
+</body>
+</html>
