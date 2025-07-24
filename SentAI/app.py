@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template, jsonify
-from sentiment_model import analyze_sentiment
-from db import insert_review, get_sentiment_stats
+from flask import Flask, render_template, request
+from textblob import TextBlob
+from collections import Counter
+import os
 
 app = Flask(__name__)
 
@@ -10,15 +11,31 @@ def index():
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    text = request.form['review']
-    result = analyze_sentiment(text)
-    insert_review(text, result['label'], result['score'])
-    return jsonify(result)
+    text = request.form['text']
+    blob = TextBlob(text)
+    sentiment = blob.sentiment.polarity
 
-@app.route('/stats', methods=['GET'])
-def stats():
-    data = get_sentiment_stats()
-    return jsonify(data)
+    if sentiment > 0:
+        label = 'Positive'
+    elif sentiment < 0:
+        label = 'Negative'
+    else:
+        label = 'Neutral'
+
+    with open('reviews/reviews.txt', 'a') as file:
+        file.write(f'{label}: {text}\n')
+
+
+    with open('reviews/reviews.txt', 'r') as file:
+        lines = file.readlines()
+    sentiments = [line.split(':')[0] for line in lines]
+    sentiment_counts = Counter(sentiments)
+
+    return render_template('result.html',
+                           sentiment=label,
+                           review=text,
+                           sentiment_counts=sentiment_counts)
 
 if __name__ == '__main__':
+    os.makedirs('reviews', exist_ok=True)
     app.run(debug=True)
