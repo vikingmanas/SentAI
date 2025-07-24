@@ -1,41 +1,32 @@
-from flask import Flask, render_template, request
-from textblob import TextBlob
-from collections import Counter
-import os
+from flask import Flask, render_template, request, jsonify
+from utils.sentiment_analyzer import analyze_sentiment
+from pymongo import MongoClient
 
 app = Flask(__name__)
+client = MongoClient("mongodb://localhost:27017/")
+db = client.sentimentDB
+collection = db.reviews
 
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    text = request.form['text']
-    blob = TextBlob(text)
-    sentiment = blob.sentiment.polarity
+    data = request.get_json()
+    text = data['text']
+    result = analyze_sentiment(text)
+    collection.insert_one({"text": text, "result": result})
+    return jsonify(result)
 
-    if sentiment > 0:
-        label = 'Positive'
-    elif sentiment < 0:
-        label = 'Negative'
-    else:
-        label = 'Neutral'
-
-    with open('reviews/reviews.txt', 'a') as file:
-        file.write(f'{label}: {text}\n')
-
-
-    with open('reviews/reviews.txt', 'r') as file:
-        lines = file.readlines()
-    sentiments = [line.split(':')[0] for line in lines]
-    sentiment_counts = Counter(sentiments)
-
-    return render_template('result.html',
-                           sentiment=label,
-                           review=text,
-                           sentiment_counts=sentiment_counts)
+@app.route('/chart-data')
+def chart_data():
+    counts = {"POSITIVE": 0, "NEGATIVE": 0, "NEUTRAL": 0}
+    for doc in collection.find():
+        label = doc["result"]["label"]
+        if label in counts:
+            counts[label] += 1
+    return jsonify(counts)
 
 if __name__ == '__main__':
-    os.makedirs('reviews', exist_ok=True)
     app.run(debug=True)

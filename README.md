@@ -1,135 +1,123 @@
-# 💬 SentAI - AI-Based Sentiment Analyzer
+# SENT AI - 🧠 AI-Based Sentiment Analyzer
 
-Analyze user sentiment from social media posts, product reviews, or any free-form text using powerful Transformer-based models.
-
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
-![Flask](https://img.shields.io/badge/Flask-Web%20Framework-green.svg)
-![Hugging Face](https://img.shields.io/badge/Hugging--Face-Transformers-yellow.svg)
-![MongoDB](https://img.shields.io/badge/MongoDB-Database-brightgreen.svg)
-
----
-
-## 📌 Features
-
-- 🔍 Analyze sentiment (Positive / Negative / Neutral)
-- 📊 Visual representation using Chart.js
-- 🧠 Powered by Hugging Face Transformers
-- 💾 Store analysis results in MongoDB
-- 🌐 Simple and interactive web UI (Flask + Bootstrap)
+[![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-%23150458.svg?style=flat&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-4.0-green?logo=mongodb)](https://www.mongodb.com/)
+[![Hugging Face](https://img.shields.io/badge/HuggingFace-Transformers-yellow?logo=huggingface)](https://huggingface.co/transformers/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## 📂 Project Structure
+## 📌 Project Description
+
+An **AI-Powered Sentiment Analyzer** that processes user-inputted reviews or text and classifies sentiment as **Positive**, **Negative**, or **Neutral** using transformer-based models. The results are visualized using dynamic charts in a user-friendly web interface.
+
+---
+
+## ⚙️ Tech Stack
+
+- **Frontend:** HTML5, CSS3, JavaScript, Chart.js  
+- **Backend:** Python, Flask  
+- **AI/ML Model:** Hugging Face Transformers (`distilbert-base-uncased-finetuned-sst-2-english`)  
+- **Database:** MongoDB  
+- **APIs & Visualization:** Chart.js  
+- **Deployment Ready:** Flask Localhost / Webserver
+
+---
+
+## 🚀 How to Run Locally
+
+### 🔧 Prerequisites
+
+- Python 3.10 or higher
+- Node.js (for chart.js frontend assets if needed)
+- MongoDB installed and running
+
+### 📁 Folder Structure
 
 ```
 SentAI/
-├── app.py
+│
 ├── static/
+│   ├── style.css
 │   └── chart.js
+│
 ├── templates/
-│   ├── index.html
-│   └── result.html
+│   └── index.html
+│
+├── app.py
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## 🚀 Getting Started
+### 🛠 Setup Instructions
 
-### 1️⃣ Clone the Repository
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/yourusername/SentAI.git
+   cd SentAI
+   ```
 
-```bash
-git clone https://github.com/yourusername/SentAI.git
-cd SentAI
-```
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 2️⃣ Install Dependencies
+3. **Start MongoDB service**
 
-```bash
-pip install -r requirements.txt
-```
+   Make sure your MongoDB is running locally on port 27017.
 
-### 3️⃣ Run the App
+4. **Run the Flask app**
+   ```bash
+   python app.py
+   ```
 
-```bash
-python app.py
-```
-
-Then, open your browser and navigate to:
-
-```
-http://127.0.0.1:5000
-```
-
----
-
-## 🧠 Model Used
-
-Using Hugging Face's `distilbert-base-uncased-finetuned-sst-2-english` model for sentiment analysis.
-
-```python
-from transformers import pipeline
-sentiment_pipeline = pipeline("sentiment-analysis")
-```
+5. **Visit in browser**
+   ```
+   http://127.0.0.1:5000/
+   ```
 
 ---
 
-## 🖼️ Demo
+## 📈 Features
 
-![Demo Screenshot](assets/demo.gif) <!-- Replace with actual GIF or image path -->
-
----
-
-## 📦 Requirements
-
-- Python 3.10+
-- Flask
-- transformers
-- torch
-- MongoDB (local or Atlas)
-
-Install via:
-
-```bash
-pip install flask transformers torch pymongo
-```
+- 🔍 Real-time sentiment prediction using BERT
+- 📊 Visual charts showing sentiment distribution
+- 💾 MongoDB integration for storing past results
+- ⚡ Fast and responsive UI with modern design
 
 ---
-
-## 📌 Sample Input
-
-> "This product exceeded all my expectations!"
-
-## ✅ Sample Output
-
-```json
-{
-  "label": "POSITIVE",
-  "score": 0.9992
-}
-```
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
 
 ---
 
 ## 📄 License
 
-MIT License © [Your Name](https://github.com/yourusername)
+This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for more info.
 
 ---
 
-## 🙋‍♂️ Author
+## 🤝 Contributing
 
-- **Manas Dubey**  
-  💼 [LinkedIn](https://www.linkedin.com/in/your-profile)  
-  💻 [GitHub](https://github.com/vikingmanas)
+Contributions are welcome!  
+1. Fork this repo  
+2. Create a new branch (`git checkout -b feature-branch`)  
+3. Make changes and commit  
+4. Push (`git push origin feature-branch`)  
+5. Create a Pull Request
 
 ---
 
-## 🌟 Don't forget to star this repo if you found it useful!
+## 💡 Future Improvements
+
+- Add multilingual sentiment support  
+- Enhance UI/UX using React or Vue  
+- Deploy on Render or Hugging Face Spaces
+
+---
+
+## 📬 Contact
+
+Created with ❤️ by [Manas Dubey](https://github.com/vikingmanas)
+

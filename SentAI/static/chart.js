@@ -1,42 +1,37 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const ctx = document.getElementById("sentimentChart").getContext("2d");
+async function analyze() {
+    const text = document.getElementById("textInput").value;
+    const res = await fetch("/analyze", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ text: text })
+    });
+    const result = await res.json();
+    document.getElementById("result").innerText =
+        `Sentiment: ${result.label} (Score: ${result.score})`;
+    loadChart();
+}
 
-    const sentimentCounts = JSON.parse(document.getElementById("sentiment-data").textContent);
+async function loadChart() {
+    const res = await fetch("/chart-data");
+    const data = await res.json();
 
-    const chart = new Chart(ctx, {
-        type: "bar",
+    const ctx = document.getElementById("myChart").getContext("2d");
+    new Chart(ctx, {
+        type: 'bar',
         data: {
-            labels: ["Positive", "Negative", "Neutral"],
+            labels: Object.keys(data),
             datasets: [{
-                label: "Sentiment Count",
-                data: [
-                    sentimentCounts.Positive || 0,
-                    sentimentCounts.Negative || 0,
-                    sentimentCounts.Neutral || 0
-                ],
-                backgroundColor: [
-                    "rgba(75, 192, 192, 0.6)",
-                    "rgba(255, 99, 132, 0.6)",
-                    "rgba(201, 203, 207, 0.6)"
-                ],
-                borderColor: [
-                    "rgba(75, 192, 192, 1)",
-                    "rgba(255, 99, 132, 1)",
-                    "rgba(201, 203, 207, 1)"
-                ],
-                borderWidth: 1
+                label: 'Sentiment Count',
+                data: Object.values(data),
+                backgroundColor: ['green', 'red', 'blue']
             }]
         },
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 1 }
-                }
-            },
+            responsive: true,
             plugins: {
-                legend: { display: false }
+                legend: { display: false },
+                title: { display: true, text: 'Sentiment Distribution' }
             }
         }
     });
-});
+}
